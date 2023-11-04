@@ -499,7 +499,7 @@ int main(int argc, char *argv[]) {
     TTF_Init();
     power_string = (char*)malloc(5 * sizeof(char)); 
     sprintf(power_string, "%d%%", power);
-    font = TTF_OpenFont("font.ttc", 30);
+    font = TTF_OpenFont("./source/font.ttc", 30);
     TTF_SizeUTF8(font, power_string, 0, 0);
 
     SDL_Event event;

@@ -17,9 +17,9 @@ ICSim: $(dir)ICSim.c
 	@gcc $(dir)ICSim.c -o ICSim $(lib) $(parameter)
 
 CVE-2022-33218: $(dir)CVE-2022-33218.c
-	@gcc $(dir)CVE-2022-33218.c -o CVE-2022-33218 $(lib) $(parameter) $(protect) 
+	@gcc $(dir)CVE-2022-33218.c -g -o CVE-2022-33218 $(lib) $(parameter) $(protect) 
 	@echo "make down"
 	
 clean:
-	@rm -rf Battery  Dashboard ICSim Seatbelt CVE-2022-33218
+	@rm -rf Battery Communication Dashboard ICSim Seatbelt CVE-2022-33218
 	@echo "clean down"
