@@ -66,7 +66,7 @@ int main(int argc, char const *argv[])
             cJSON *json = cJSON_Parse(jsonStart);
             if (json == NULL) {
                 printf("JSON parsing failed\n");
-                return 1;
+                continue;
             }
 
             cJSON *currentItem = json->child;
