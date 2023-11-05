@@ -514,7 +514,7 @@ void communicate_with_charging_pile() {
     Power_Delivery_Stage(true); //true >> ChargeProgress : Start
     sleep(1);
 
-    for(int i = 1; i<=charge_times; i++) { //假設傳送5次就充滿電了
+    for(int i = 1; i<=charge_times; i++) {
         Charging_State();
         sned_charge_state(0);
         printf("充電%d次\n", i);
