@@ -76,9 +76,13 @@ int main(int argc, char const *argv[])
                     if(strcmp(currentItem->string, "156748") == 0) {
                         if(strcmp(currentItem->valuestring, "OPEN") == 0) {
                             system("cansend vcan0 19B#00000E");
+                            char *response_message = "接收到開門訊息\n";
+                            send(client_socket, response_message, strlen(response_message), 0);
                         }
                         else if(strcmp(currentItem->valuestring, "CLOSE") == 0) {
                             system("cansend vcan0 19B#00000F");
+                            char *response_message = "接收到關門訊息\n";
+                            send(client_socket, response_message, strlen(response_message), 0);
                         }
                     }
                     else if(strcmp(currentItem->string, "182374") == 0) {
