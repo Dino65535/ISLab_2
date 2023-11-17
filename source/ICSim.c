@@ -483,6 +483,22 @@ void update_charge_state(struct canfd_frame *cf, int maxdlen) {
     }
 }
 
+void send_MSG_to_DB(){
+    time_t current_time;
+    struct tm *time_info;
+    char time_str[25];
+    char curl_command[400]; 
+
+    time(&current_time);
+    time_info = localtime(&current_time);
+    strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", time_info);
+
+    //sprintf(curl_command, "curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"17\", \"mileage\":\"27\", \"speed\":\"37\", \"driving_time\":\"47\", \"inside_temp\":\"57\", \"outside_temp\":\"67\", \"battery_health\":\"77\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, time_str);
+    //system(curl_command);
+    printf("time:%s\n", time_str);
+    printf("power:%d", power);
+}
+
 int main(int argc, char *argv[]) {
     struct ifreq ifr;
     struct sockaddr_can addr;
@@ -653,9 +669,7 @@ int main(int argc, char *argv[]) {
 	        if(frame.can_id == DEFAULT_charge_ID) update_charge_state(&frame, maxdlen);
 	        if(frame.can_id == DEFAULT_SPEED_ID) {update_speed_status(&frame, maxdlen);
 	        	times++;
-	        	if(times >= 100 && !charge){
-	        		times = 0;
-
+	        	if(times%100 == 0 && !charge){
 	        		power-=2;
 	        		if(power < 0) power = 0;
 	        		battery_green_rect.y += 3;
@@ -669,6 +683,12 @@ int main(int argc, char *argv[]) {
 
 				    update_battery();
 				    SDL_RenderPresent(renderer);
+
+                    if(times >= 500){
+                        times = 0;
+
+                        send_MSG_to_DB();
+                    }
 	        	}
 	        }
 
