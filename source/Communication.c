@@ -74,23 +74,25 @@ int main(int argc, char const *argv[])
                 if (currentItem->string != NULL) {
                     //printf("Key: %s, Value: %s\n", currentItem->string, currentItem->valuestring);
                     if(strcmp(currentItem->string, "156748") == 0) {
-                        if(strcmp(currentItem->valuestring, "OPEN") == 0) {
+                        if(strcmp(currentItem->valuestring, "DOOR_OPEN") == 0) {
                             system("cansend vcan0 19B#00000E");
                             char *response_message = "接收到開門訊息\n";
                             send(client_socket, response_message, strlen(response_message), 0);
                         }
-                        else if(strcmp(currentItem->valuestring, "CLOSE") == 0) {
+                        else if(strcmp(currentItem->valuestring, "DOOR_CLOSE") == 0) {
                             system("cansend vcan0 19B#00000F");
                             char *response_message = "接收到關門訊息\n";
                             send(client_socket, response_message, strlen(response_message), 0);
                         }
-                    }
-                    else if(strcmp(currentItem->string, "182374") == 0) {
-                        if(strcmp(currentItem->valuestring, "OPEN") == 0) {
-                            system("cansend vcan0 19B#00000E");
+                        else if(strcmp(currentItem->valuestring, "AC_OPEN") == 0) {
+                            system("cansend vcan0 320#000001");
+                            char *response_message = "接收到開冷氣訊息\n";
+                            send(client_socket, response_message, strlen(response_message), 0);
                         }
-                        else if(strcmp(currentItem->valuestring, "CLOSE") == 0) {
-                            system("cansend vcan0 19B#00000F");
+                        else if(strcmp(currentItem->valuestring, "AC_CLOSE") == 0) {
+                            system("cansend vcan0 320#000000");
+                            char *response_message = "接收到關冷氣訊息\n";
+                            send(client_socket, response_message, strlen(response_message), 0);
                         }
                     }
                 }

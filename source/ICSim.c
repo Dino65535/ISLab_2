@@ -105,6 +105,19 @@ SDL_Rect park_rect = { 600, 150, 70, 70};
 SDL_Rect seatbelt_rect = { 600, 230, 80, 80};
 SDL_Rect logo_rect = {250, 230, 80, 80};
 
+//CarData==============================
+int CarData_index = 0;
+struct CarData {
+    int cost;
+    int mileage;
+    int car_speed;
+    int driving_time;
+    int inside_temp;
+    int outside_temp;
+    int battery_health;
+    int co2;
+};
+
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -483,7 +496,7 @@ void update_charge_state(struct canfd_frame *cf, int maxdlen) {
     }
 }
 
-void send_MSG_to_DB(){
+void send_MSG_to_DB(struct CarData data){
     time_t current_time;
     struct tm *time_info;
     char time_str[25];
@@ -493,10 +506,10 @@ void send_MSG_to_DB(){
     time_info = localtime(&current_time);
     strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", time_info);
 
-    //sprintf(curl_command, "curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"17\", \"mileage\":\"27\", \"speed\":\"37\", \"driving_time\":\"47\", \"inside_temp\":\"57\", \"outside_temp\":\"67\", \"battery_health\":\"77\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, time_str);
+    //sprintf(curl_command, "curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"%d\", \"mileage\":\"%d\", \"speed\":\"%d\", \"driving_time\":\"%d\", \"inside_temp\":\"%d\", \"outside_temp\":\"%d\", \"battery_health\":\"%d\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, data.cost, data.mileage, data.speed, data.driving_time, data.inside_temp, data.outside_temp, data.battery_health, time_str);
     //system(curl_command);
-    printf("time:%s\n", time_str);
-    printf("power:%d", power);
+    printf("curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"%d\", \"mileage\":\"%d\", \"speed\":\"%d\", \"driving_time\":\"%d\", \"inside_temp\":\"%d\", \"outside_temp\":\"%d\", \"battery_health\":\"%d\", \"co2\":\"%d\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, data.cost, data.mileage, data.car_speed, data.driving_time, data.inside_temp, data.outside_temp, data.battery_health, data.co2,time_str);
+    printf("\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -608,6 +621,24 @@ int main(int argc, char *argv[]) {
     //logo
     SDL_Surface *logo = IMG_Load(get_data("ttu_logo.png"));
     logo_tex = SDL_CreateTextureFromSurface(renderer, logo);
+    //set car data
+    struct CarData carDataArray[15] = {
+        {481, 120, 60, 2, 22, 18, 98, 1},
+        {394, 90, 45, 4, 20, 21, 95, 2},
+        {562, 150, 70, 1, 24, 27, 95, 3},
+        {438, 110, 55, 3, 23, 20, 93, 2},
+        {506, 130, 65, 2, 26, 28, 92, 4},
+        {376, 80, 40, 2, 18, 16, 91, 1},
+        {549, 140, 55, 8, 25, 23, 90, 1},
+        {321, 70, 35, 2, 17, 15, 88, 4},
+        {481, 120, 60, 3, 22, 18, 87, 1},
+        {394, 90, 45, 7, 20, 21, 87, 3},
+        {562, 150, 70, 2, 24, 27, 86, 2},
+        {438, 110, 55, 5, 23, 20, 85, 1},
+        {506, 130, 65, 6, 26, 28, 83, 3},
+        {376, 80, 40, 8, 18, 16, 83, 4},
+        {549, 140, 55, 4, 25, 23, 82, 2}
+    };
 
     speed_rect.x = 212;
     speed_rect.y = 175;
@@ -687,7 +718,8 @@ int main(int argc, char *argv[]) {
                     if(times >= 500){
                         times = 0;
 
-                        send_MSG_to_DB();
+                        send_MSG_to_DB(carDataArray[CarData_index++]);
+                        CarData_index %= 15;
                     }
 	        	}
 	        }
