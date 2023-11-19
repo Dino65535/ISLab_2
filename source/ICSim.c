@@ -506,7 +506,7 @@ void send_MSG_to_DB(struct CarData data){
     time_info = localtime(&current_time);
     strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", time_info);
 
-    sprintf(curl_command, "curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"%d\", \"mileage\":\"%d\", \"speed\":\"%d\", \"driving_time\":\"%d\", \"inside_temp\":\"%d\", \"outside_temp\":\"%d\", \"battery_health\":\"%d\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, data.cost, data.mileage, data.speed, data.driving_time, data.inside_temp, data.outside_temp, data.battery_health, time_str);
+    sprintf(curl_command, "curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"%d\", \"mileage\":\"%d\", \"speed\":\"%d\", \"driving_time\":\"%d\", \"inside_temp\":\"%d\", \"outside_temp\":\"%d\", \"battery_health\":\"%d\", \"co2\":\"%d\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, data.cost, data.mileage, data.car_speed, data.driving_time, data.inside_temp, data.outside_temp, data.battery_health, data.co2,time_str);
     system(curl_command);
     //printf("curl -X POST -H \"Content-Type: application/json\" -d '{\"charge\":\"%d\", \"cost\":\"%d\", \"mileage\":\"%d\", \"speed\":\"%d\", \"driving_time\":\"%d\", \"inside_temp\":\"%d\", \"outside_temp\":\"%d\", \"battery_health\":\"%d\", \"co2\":\"%d\",\"time\":\"%s\"}' http://10.103.103.21:5000/api/car", power, data.cost, data.mileage, data.car_speed, data.driving_time, data.inside_temp, data.outside_temp, data.battery_health, data.co2,time_str);
 }
